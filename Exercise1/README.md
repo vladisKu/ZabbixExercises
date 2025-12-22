@@ -63,7 +63,7 @@ environment, similar to Alpine CI.
 
 ## Resulting Packages
 After a successful build, packages are available under:
-~/packages/builder/<arch>/
+~/packages/builder/aarch64/
 
 ## Example:
 - zabbix-agent-7.2.0-r0.apk
