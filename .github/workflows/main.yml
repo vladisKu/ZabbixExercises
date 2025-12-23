@@ -30,8 +30,9 @@ jobs:
               chown -R builder:builder /tmp/build &&
               cd /tmp/build &&
               abuild-keygen -a -n &&
+              doas cp /home/builder/.abuild/*.pub /etc/apk/keys/ &&
               abuild checksum &&
-              abuild -r --no-index
+              abuild -r
             "
 
       - name: Upload APK artifacts
