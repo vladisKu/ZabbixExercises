@@ -31,7 +31,7 @@ jobs:
               cd /tmp/build &&
               abuild-keygen -a -n &&
               abuild checksum &&
-              abuild -r
+              abuild -r --no-index
             "
 
       - name: Upload APK artifacts
