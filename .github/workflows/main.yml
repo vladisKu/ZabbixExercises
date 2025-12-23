@@ -25,6 +25,7 @@ jobs:
             zabbix-alpine-builder \
             sh -c "
               doas apk update &&
+              chown -R builder:builder /home/builder/packages
               cp -r /src /tmp/build &&
               chown -R builder:builder /tmp/build &&
               cd /tmp/build &&
