@@ -1,0 +1,37 @@
+name: Build and Deploy Zabbix
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build builder image
+        run: docker build -t zabbix-alpine-builder .
+
+      - name: Build Zabbix APK
+        run: |
+          mkdir -p ${{ github.workspace }}/packages
+          docker run --rm \
+            -v ${{ github.workspace }}:/home/builder/zabbix \
+            -v ${{ github.workspace }}/packages:/home/builder/packages \
+            zabbix-alpine-builder \
+            sh -c "
+              abuild-keygen -a -n &&
+              cd /home/builder/zabbix &&
+              abuild checksum &&
+              abuild -r
+            "
+
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: zabbix-apk
+          path: packages/**/*.apk

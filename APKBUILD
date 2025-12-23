@@ -1,0 +1,83 @@
+# Maintainer: Vladislavs <vladislavsk@noemail.com>
+
+pkgname=zabbix
+pkgver=7.2.0
+pkgrel=0
+pkgdesc="Zabbix monitoring agent and proxy"
+url="https://www.zabbix.com"
+arch="all"
+license="GPL-2.0-or-later"
+depends="openssl curl pcre2 libxml2 sqlite-libs libevent"
+makedepends="
+    openssl-dev
+    curl-dev
+    pcre2-dev
+    libxml2-dev
+    sqlite-dev
+    libevent-dev
+    linux-headers
+"
+source="https://cdn.zabbix.com/zabbix/sources/stable/7.2/zabbix-$pkgver.tar.gz"
+builddir="$srcdir/zabbix-$pkgver"
+
+subpackages="
+    zabbix-agent
+    zabbix-proxy
+    zabbix-doc
+"
+
+prepare() {
+    default_prepare
+}
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc/zabbix \
+        --enable-agent \
+        --enable-proxy \
+        --with-openssl \
+        --with-libcurl \
+        --with-libxml2 \
+        --with-sqlite3 \
+        --with-libpcre2
+
+    make
+}
+
+package() {
+    make DESTDIR="$pkgdir" install
+}
+
+agent() {
+    pkgdesc="Zabbix monitoring agent"
+    depends="$depends"
+
+    mkdir -p "$subpkgdir"/usr/sbin
+    mkdir -p "$subpkgdir"/etc/zabbix
+
+    mv "$pkgdir"/usr/sbin/zabbix_agentd "$subpkgdir"/usr/sbin/
+    mv "$pkgdir"/etc/zabbix/zabbix_agentd.conf "$subpkgdir"/etc/zabbix/
+}
+
+proxy() {
+    pkgdesc="Zabbix proxy (SQLite backend)"
+    depends="$depends"
+
+    mkdir -p "$subpkgdir"/usr/sbin
+    mkdir -p "$subpkgdir"/etc/zabbix
+
+    mv "$pkgdir"/usr/sbin/zabbix_proxy "$subpkgdir"/usr/sbin/
+    mv "$pkgdir"/etc/zabbix/zabbix_proxy.conf "$subpkgdir"/etc/zabbix/
+}
+
+doc() {
+    pkgdesc="Documentation for Zabbix (man pages)"
+
+    mkdir -p "$subpkgdir"/usr/share
+    mv "$pkgdir"/usr/share/man "$subpkgdir"/usr/share/
+
+    # Compress man pages as required by Alpine policy
+    find "$subpkgdir"/usr/share/man -type f -exec gzip -9 {} \;
+}
+
