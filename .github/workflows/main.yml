@@ -15,6 +15,10 @@ jobs:
 
       - name: Build builder image
         run: docker build -t zabbix-alpine-builder .
+<<<<<<< HEAD
+=======
+        working-directory: Exercise2
+>>>>>>> 713290a (Add Exercise2 CI/CD pipeline and GitHub Actions workflow)
 
       - name: Build Zabbix APK
         run: |
