@@ -20,13 +20,14 @@ jobs:
         run: |
           mkdir -p ${{ github.workspace }}/packages
           docker run --rm \
-            -v ${{ github.workspace }}:/home/builder/zabbix \
+            -v ${{ github.workspace }}:/src:ro  \
             -v ${{ github.workspace }}/packages:/home/builder/packages \
             zabbix-alpine-builder \
             sh -c "
-              chown -R builder:builder /home/builder/zabbix &&
+              cp -r /src /tmp/build &&
+              chown -R builder:builder /tmp/build &&
+              cd /tmp/build &&
               abuild-keygen -a -n &&
-              cd /home/builder/zabbix &&
               abuild checksum &&
               abuild -r
             "
