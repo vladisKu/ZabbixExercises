@@ -24,6 +24,7 @@ jobs:
             -v ${{ github.workspace }}/packages:/home/builder/packages \
             zabbix-alpine-builder \
             sh -c "
+              chown -R builder:builder /home/builder/zabbix &&
               abuild-keygen -a -n &&
               cd /home/builder/zabbix &&
               abuild checksum &&
