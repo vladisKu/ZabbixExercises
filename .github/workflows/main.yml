@@ -28,7 +28,7 @@ jobs:
               doas chown -R builder:builder /home/builder/packages &&
               cp -r /src /tmp/build &&
               chown -R builder:builder /tmp/build &&
-              cd /tmp/build &&
+              cd /tmp/build/Exercise2 &&
               abuild-keygen -a -n &&
               doas cp /home/builder/.abuild/*.pub /etc/apk/keys/ &&
               abuild checksum &&
