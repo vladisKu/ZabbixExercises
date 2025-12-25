@@ -96,7 +96,9 @@ This produces signed .apk packages under the mounted packages/ directory.
 ---
 
 ### 4. Upload Build Artifacts
-
+```yaml
+- uses: actions/upload-artifact@v4
+```
 All generated .apk files are uploaded as GitHub Actions artifacts, making them available for:
 - download
 - testing
